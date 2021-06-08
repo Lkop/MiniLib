@@ -1,12 +1,6 @@
-import models.ClassInfo;
-
-import java.io.*;
-import java.util.*;
-
-
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         ClassCreator cc = new ClassCreator("Generated");
 
         StringBuilder my_method = new StringBuilder();
@@ -17,14 +11,13 @@ public class Main {
                 .append("}");
 
         cc.addMethod(my_method);
-
         cc.createClassFile();
 
-        
-        ClassInsider ci = new ClassInsider("examples/client_jar/Client.jar");
+        ClassInsider ci = new ClassInsider("C:\\Users\\Loukas\\Desktop\\MiniLibWorkspace\\Client\\out\\artifacts\\Client_jar\\Client.jar");
+        ci.assignStartingMethod("Main", "main");
+        ci.listCalledMethods();
 
-        for(ClassInfo model : (List<ClassInfo>)ci.listCalledMethods("Main", "main")) {
-            System.out.println(model.getClassName() + " " + model.getMethodName());
-        }
+        MethodElement method_tree = ci.getRoot();
+        System.out.println("Done");
     }
 }
