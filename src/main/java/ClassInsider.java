@@ -1,20 +1,18 @@
 import models.ClassInfo;
-
 import javassist.*;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
 
 public class ClassInsider {
 
     private ClassPool class_pool;
     private String starting_class;
     private String starting_method;
-    private MethodElement root;
+    private MethodElement root = null;
+    private MethodElement current_parent = null;
     private Stack<MethodElement> parents_stack = new Stack<>();
     private int limit=0;
 
@@ -40,16 +38,23 @@ public class ClassInsider {
 
     public List listCalledMethods() {
         List<ClassInfo> m_list = new ArrayList<>();
-        if (root == null) {
-            root = new MethodElement("","");
-        }
-        parents_stack.push(root);
-        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, m_list);
+//        parents_stack.push(root);
+        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, m_list, null);
         return m_list;
     }
 
-    private void listCalledMethodsRecursive(String class_name, String starting_method, List list) {
-        MethodElement current_parent = parents_stack.peek();
+    public List listCalledMethods(List keep_only) {
+        List<ClassInfo> m_list = new ArrayList<>();
+//        parents_stack.push(root);
+        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, m_list, keep_only);
+        return m_list;
+    }
+
+    private void listCalledMethodsRecursive(String class_name, String starting_method, List list, List keep_only) {
+        if (root != null) {
+            current_parent = parents_stack.peek();
+        }
+
         try {
             CtClass ct_class = class_pool.get(class_name);
             CtMethod method = ct_class.getDeclaredMethod(starting_method);
@@ -58,15 +63,19 @@ public class ClassInsider {
                     public void edit(MethodCall method) {
                         System.out.println(method.getClassName() + "  " + method.getMethodName());
 
-                        MethodElement new_node = new MethodElement(method.getClassName(), method.getMethodName());
-                        current_parent.addChild(new_node);
-                        parents_stack.push(new_node);
-
-                        if (limit < 10) {
-                            limit++;
-                            listCalledMethodsRecursive(method.getClassName(), method.getMethodName(), list);
+                        if(keep_only != null && keep_only.contains(method.getClassName())) {
+                            MethodElement new_node = new MethodElement(method.getClassName(), method.getMethodName());
+                            if (root == null) {
+                                root = new_node;
+                                parents_stack.push(root);
+                                current_parent = new_node; // = parents_stack.peek();
+                            } else {
+                                current_parent.addChild(new_node);
+                                parents_stack.push(new_node);
+                            }
+                            listCalledMethodsRecursive(method.getClassName(), method.getMethodName(), list, keep_only);
+                            parents_stack.pop();
                         }
-                        parents_stack.pop();
                     }
                 });
         }catch (NotFoundException | CannotCompileException e) {
