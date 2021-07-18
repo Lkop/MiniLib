@@ -3,7 +3,6 @@ package treecomponents;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class BaseTreeElement {
 
     //Auto increment
@@ -33,7 +32,14 @@ public class BaseTreeElement {
         children.add(child);
     }
 
+    public BaseTreeElement getFirstParent() {
+        return parents.get(0);
+    }
+
     public List<BaseTreeElement> getChildren() {
+        if(children == null) {
+            return new ArrayList<>();
+        }
         return children;
     }
 }

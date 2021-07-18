@@ -1,3 +1,5 @@
+import treecomponents.BaseTreeElement;
+import treecomponents.BaseVisitor;
 import treecomponents.VisitableBaseTreeElement;
 
 public class MethodElement extends VisitableBaseTreeElement {
@@ -16,5 +18,22 @@ public class MethodElement extends VisitableBaseTreeElement {
 
     public String getMethodName() {
         return method_name;
+    }
+
+    public MethodElement getFirstParent() {
+        return (MethodElement) super.getFirstParent();
+    }
+
+    public String getGraphvizName(){
+        return method_name+"_"+getSerialId();
+    }
+
+    @Override
+    public <T> T accept(BaseVisitor<? extends T> visitor) {
+        TreePrinterVisitor v = (TreePrinterVisitor)visitor;
+        if (v != null) {
+            return (T) v.visitMethodElement(this);
+        }
+        return null;
     }
 }

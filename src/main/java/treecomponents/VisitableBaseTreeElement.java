@@ -6,4 +6,5 @@ public class VisitableBaseTreeElement extends BaseTreeElement implements Visitab
     public <T> T accept(BaseVisitor<? extends T> visitor) {
         return null;
     }
+
 }
