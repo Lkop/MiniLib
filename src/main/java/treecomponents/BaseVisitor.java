@@ -1,7 +1,5 @@
 package treecomponents;
 
-import java.util.List;
-
 public abstract class BaseVisitor<T> implements TreeVisitor {
 
     private BaseTreeElement parent = null;
@@ -12,7 +10,7 @@ public abstract class BaseVisitor<T> implements TreeVisitor {
     }
 
     public T visitChildren(BaseTreeElement node) {
-        BaseTreeElement oldParent= parent;
+        BaseTreeElement oldParent = parent;
         parent = node;
         T netResult = null;
 
