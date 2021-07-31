@@ -1,8 +1,6 @@
 import javassist.*;
 import javassist.bytecode.ClassFile;
-
 import java.io.*;
-
 
 public class ClassCreator {
 
@@ -12,8 +10,8 @@ public class ClassCreator {
 
     public ClassCreator (String classname){
         this.classname = classname;
-        class_pool = ClassPool.getDefault();
-        new_class = class_pool.makeClass(classname);
+        this.class_pool = ClassPool.getDefault();
+        this.new_class = class_pool.makeClass(classname);
     }
 
     public void addMethod(StringBuilder method) {
@@ -37,7 +35,7 @@ public class ClassCreator {
     public void createClassFile() {
         try {
             ClassFile cf = class_pool.get(classname).getClassFile();
-            File file = new File(classname + ".class");
+            File file = new File("output/" + classname + ".class");
             cf.write(new DataOutputStream(new FileOutputStream(file)));
         }catch (NotFoundException | IOException e) {
             e.printStackTrace();
