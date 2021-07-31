@@ -30,7 +30,7 @@ public class MethodElement extends VisitableBaseTreeElement {
 
     @Override
     public <T> T accept(BaseVisitor<? extends T> visitor) {
-        TreePrinterVisitor v = (TreePrinterVisitor)visitor;
+        MethodElementVisitor v = (MethodElementVisitor)visitor;
         if (v != null) {
             return (T) v.visitMethodElement(this);
         }
