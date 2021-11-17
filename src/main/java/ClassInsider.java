@@ -16,6 +16,7 @@ public class ClassInsider {
     private Stack<MethodElement> parents_stack = new Stack<>();
     private int limit=0;
 
+    private List<String> keep_only;
 
     public ClassInsider(String jar_path) {
         class_pool = ClassPool.getDefault();
@@ -39,18 +40,19 @@ public class ClassInsider {
     public List listCalledMethods() {
         List<ClassInfo> m_list = new ArrayList<>();
 //        parents_stack.push(root);
-        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, m_list, null);
+        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, m_list);
         return m_list;
     }
 
-    public List listCalledMethods(List keep_only) {
+    public List listCalledMethods(List<String> keep_only) {
+        this.keep_only = keep_only;
         List<ClassInfo> m_list = new ArrayList<>();
 //        parents_stack.push(root);
-        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, m_list, keep_only);
+        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, m_list);
         return m_list;
     }
 
-    private void listCalledMethodsRecursive(String class_name, String starting_method, List list, List keep_only) {
+    private void listCalledMethodsRecursive(String class_name, String starting_method, List list) {
         if (root != null) {
             current_parent = parents_stack.peek();
         }
@@ -73,7 +75,7 @@ public class ClassInsider {
                                 current_parent.addChild(new_node);
                                 parents_stack.push(new_node);
                             }
-                            listCalledMethodsRecursive(method.getClassName(), method.getMethodName(), list, keep_only);
+                            listCalledMethodsRecursive(method.getClassName(), method.getMethodName(), list);
                             parents_stack.pop();
                         }
                     }
