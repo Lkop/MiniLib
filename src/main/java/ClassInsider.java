@@ -28,6 +28,17 @@ public class ClassInsider {
         }
     }
 
+    public ClassInsider(List<File> jar_list) {
+        class_pool = ClassPool.getDefault();
+        try {
+            for (File jar_file : jar_list) {
+                class_pool.insertClassPath(jar_file.getAbsolutePath());
+            }
+        }catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public MethodElement getRoot() {
         return root;
     }
