@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,14 +8,25 @@ import java.util.zip.ZipInputStream;
 
 public class ClassParser {
 
-    private String jar_path;
+    private List<String> class_list;
 
-    public ClassParser(String jar_path) {
-        this.jar_path = jar_path;
+    public ClassParser() {
+        class_list = new ArrayList<>();
     }
 
-    public List getClasses() {
-        List<String> class_list = new ArrayList<>();
+    public List getClasses(String jar_path) {
+        this.getClassesPrivate(jar_path);
+        return class_list;
+    }
+
+    public List getClasses(List<File> jar_list) {
+        for (File jar_file : jar_list) {
+            this.getClassesPrivate(jar_file.getAbsolutePath());
+        }
+        return class_list;
+    }
+
+    private void getClassesPrivate(String jar_path) {
         try {
             ZipInputStream zip = new ZipInputStream(new FileInputStream(jar_path));
             for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
@@ -22,11 +34,9 @@ public class ClassParser {
                     String class_fullname = entry.getName().replace('/', '.'); // including ".class"
                     class_list.add(class_fullname.substring(0, class_fullname.length() - ".class".length()));
                 }
-
             }
         } catch(IOException e) {
             e.printStackTrace();
         }
-        return class_list;
     }
 }
