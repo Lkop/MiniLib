@@ -22,7 +22,7 @@ public class ClassInsider {
         class_pool = ClassPool.getDefault();
 
         try {
-            class_pool.insertClassPath(jar_path);
+            class_pool.appendClassPath(jar_path);
         }catch (NotFoundException e) {
             e.printStackTrace();
         }
