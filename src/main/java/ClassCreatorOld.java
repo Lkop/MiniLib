@@ -2,13 +2,13 @@ import javassist.*;
 import javassist.bytecode.ClassFile;
 import java.io.*;
 
-public class ClassCreator {
+public class ClassCreatorOld {
 
     private String classname;
     private ClassPool class_pool;
     private CtClass new_class;
 
-    public ClassCreator (String classname){
+    public ClassCreatorOld(String classname){
         this.classname = classname;
         this.class_pool = ClassPool.getDefault();
         this.new_class = class_pool.makeClass(classname);
@@ -26,6 +26,11 @@ public class ClassCreator {
         try {
             CtClass selected_class = class_pool.getCtClass(class_name);
             new_class.addMethod(CtNewMethod.copy(selected_class.getDeclaredMethod(method_name), new_class, null));
+            ////
+            CtClass selected_class2 = class_pool.getCtClass("com.google.gson.Gson");
+            CtConstructor[] ct_con = selected_class2.getDeclaredConstructors();
+            new_class.addConstructor(CtNewConstructor.copy(ct_con[1], new_class, null));
+            ////
         }catch(CannotCompileException | NotFoundException e) {
             return false;
         }
