@@ -1,23 +1,29 @@
 public class ClassGeneratorVisitor extends MethodElementVisitor<Integer> {
 
-    private ClassCreator cc;
+    private PackageCreator pc;
 
     public ClassGeneratorVisitor(String filename) {
-        cc = new ClassCreator(filename);
+        pc = new PackageCreator();
+    }
+
+    @Override
+    public Integer visitStartingMethodElement(MethodElement node) {
+        super.visitMethodElement(node);
+        return 0;
     }
 
     @Override
     public Integer visitMethodElement(MethodElement node) {
-        System.out.println("Copying: " + node.getClassName() + " -> " + node.getMethodName() + "()");
+        System.out.println("Copying: " + node.getClassLongName() + " -> " + node.getMethodName() + "()");
 
-        cc.copyExistingMethod(node.getClassName(), node.getMethodName());
+        pc.addToPackage(node);
 
         super.visitMethodElement(node);
 
         return 0;
     }
 
-    public void createClassFile() {
-        cc.createClassFile();
-    }
+//    public void createClassFile() {
+//        cc.createClassFile();
+//    }
 }
