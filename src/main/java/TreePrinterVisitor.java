@@ -50,6 +50,12 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
         }
     }
 
+//    @Override
+//    public Integer visitStartingMethodElement(MethodElement node) {
+//        super.visitMethodElement(node);
+//        return 0;
+//    }
+
     @Override
     public Integer visitMethodElement(MethodElement node) {
         System.out.println("ASTVisitableElement -> "+node.getMethodName());

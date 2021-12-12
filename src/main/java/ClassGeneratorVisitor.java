@@ -6,11 +6,11 @@ public class ClassGeneratorVisitor extends MethodElementVisitor<Integer> {
         pc = new PackageCreator();
     }
 
-    @Override
-    public Integer visitStartingMethodElement(MethodElement node) {
-        super.visitMethodElement(node);
-        return 0;
-    }
+//    @Override
+//    public Integer visitStartingMethodElement(MethodElement node) {
+//        super.visitMethodElement(node);
+//        return 0;
+//    }
 
     @Override
     public Integer visitMethodElement(MethodElement node) {
