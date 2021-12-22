@@ -50,26 +50,36 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
         }
     }
 
-//    @Override
-//    public Integer visitStartingMethodElement(MethodElement node) {
-//        super.visitMethodElement(node);
-//        return 0;
-//    }
+    @Override
+    public Integer visitStartingMethodElement(StartingMethodElement node) {
+        System.out.println("StartingMethodVisitableElement -> "+node.getMethodName());
+        super.visitStartingMethodElement(node);
+        return 0;
+    }
 
     @Override
     public Integer visitMethodElement(MethodElement node) {
-        System.out.println("ASTVisitableElement -> "+node.getMethodName());
-
-        pos.push(0);
-        extractSubgraphs(node);
-        pos.pop();
-
+        System.out.println("MethodVisitableElement -> "+node.getMethodName());
+//        pos.push(0);
+//        extractSubgraphs(node);
+//        pos.pop();
         if(node.getSerialId() != 0) {
             writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
         }
-
         super.visitMethodElement(node);
+        return 0;
+    }
 
+    @Override
+    public Integer visitConstructorElement(ConstructorElement node) {
+        System.out.println("ConstructorVisitableElement -> "+node.getMethodName());
+//        pos.push(0);
+//        extractSubgraphs(node);
+//        pos.pop();
+        if(node.getSerialId() != 0) {
+            writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
+        }
+        super.visitConstructorElement(node);
         return 0;
     }
 }
