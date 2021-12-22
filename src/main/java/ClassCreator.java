@@ -17,12 +17,18 @@ public class ClassCreator {
             CtClass old_class = old_classpool.getCtClass(class_longname);
             CtMethod old_method = old_class.getDeclaredMethod(method_name, params);
             new_class.addMethod(CtNewMethod.copy(old_method, new_class, null));
+        }catch(CannotCompileException | NotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
-//            ////
-//            CtClass selected_class2 = class_pool.getCtClass("com.google.gson.Gson");
-//            CtConstructor[] ct_con = selected_class2.getDeclaredConstructors();
-//            new_class.addConstructor(CtNewConstructor.copy(ct_con[1], new_class, null));
-//            ////
+    public boolean copyExistingConstructor(String class_longname, CtClass[] params) {
+        initializeCtClass(class_longname);
+        try {
+            CtClass old_class = old_classpool.getCtClass(class_longname);
+            CtConstructor ct_constructor = old_class.getDeclaredConstructor(params);
+            new_class.addConstructor(CtNewConstructor.copy(ct_constructor, new_class, null));
         }catch(CannotCompileException | NotFoundException e) {
             e.printStackTrace();
         }
