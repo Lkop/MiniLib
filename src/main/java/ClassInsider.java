@@ -70,7 +70,10 @@ public class ClassInsider {
         this.one_time = new ArrayList<>();
 
         List<ClassInfo> m_list = new ArrayList<>();
-//        parents_stack.push(root);
+
+        root = new StartingMethodElement();
+        parents_stack.push(root);
+
         this.listCalledMethodsRecursive(this.starting_class, this.starting_method, this.params, Enum.ExprCall.METHOD_CALL, m_list);
         //this.listCalledMethodsRecursive(this.starting_class, this.starting_method, null, 2);
         return m_list;
@@ -128,10 +131,6 @@ public class ClassInsider {
 //    }
 
     private void listCalledMethodsRecursive(String class_name, String starting_method, CtClass[] params, Enum.ExprCall type, List list) {
-        if (root != null) {
-            current_parent = parents_stack.peek();
-        }
-
         try {
             CtClass ct_class = class_pool.get(class_name);
 
@@ -151,9 +150,10 @@ public class ClassInsider {
                     public void edit(NewExpr e) {
                         try {
                             CtConstructor constructor = e.getConstructor();
-                            String inline_info = constructor.getName();
-                            //System.out.println(inline_info);
+                            String inline_info = constructor.getSignature();
+                            System.out.println(inline_info);
                             if (!constructor.isEmpty()) {
+                                addToTree(constructor.getLongName().replaceAll("\\([^)]*\\)", ""), null, constructor.getSignature(), constructor.getParameterTypes(), Enum.ExprCall.CONSTRUCTOR_CALL, list);
                                 listCalledMethodsRecursive(constructor.getLongName().replaceAll("\\([^)]*\\)", ""), constructor.getName(), constructor.getParameterTypes(), Enum.ExprCall.CONSTRUCTOR_CALL, list);
                             }
                         } catch (NotFoundException ex) {
@@ -171,7 +171,7 @@ public class ClassInsider {
                         String inline_info = m.getClassName() + "+" + m.getMethodName() + "+" + m.getSignature();
                         //System.out.println(inline_info);
                         try {
-                            addToTree(m, m.getMethod().getParameterTypes(), Enum.ExprCall.METHOD_CALL, list);
+                            addToTree(m.getClassName(), m.getMethodName(), m.getSignature(), m.getMethod().getParameterTypes(), Enum.ExprCall.METHOD_CALL, list);
                         } catch (NotFoundException e) {
                             e.printStackTrace();
                         }
@@ -182,7 +182,7 @@ public class ClassInsider {
                         String inline_info = c.getClassName() + "+" + c.getMethodName() + "+" + c.getSignature();
                         //System.out.println(inline_info);
                         try {
-                            addToTree(c, c.getConstructor().getParameterTypes(), Enum.ExprCall.CONSTRUCTOR_CALL, list);
+                            addToTree(c.getClassName(), c.getMethodName(), c.getSignature(), c.getConstructor().getParameterTypes(), Enum.ExprCall.CONSTRUCTOR_CALL, list);
                         } catch (NotFoundException e) {
                             e.printStackTrace();
                         }
@@ -194,27 +194,43 @@ public class ClassInsider {
         }
     }
 
-    private void addToTree(MethodCall method_call, CtClass[] params, Enum.ExprCall call_type, List list) throws NotFoundException {
-        if(keep_only != null && keep_only.contains(method_call.getClassName())) {
-            String inline_info = method_call.getClassName() + "+" + method_call.getMethodName() + "+" + method_call.getSignature();
+    private void addToTree(String class_name, String method_name, String signature, CtClass[] params, Enum.ExprCall call_type, List list) throws NotFoundException {
+        if (root != null) {
+            if(parents_stack.size() > 0) {
+                current_parent = parents_stack.peek();
+            }else{
+                current_parent = root;
+            }
+        }
+
+        if(keep_only != null && keep_only.contains(class_name)) {
+            String inline_info = class_name + "+" + method_name + "+" + signature;
             if(!one_time.contains(inline_info)) {
                 one_time.add(inline_info);
                 System.out.println(inline_info);
-                MethodElement new_node = new MethodElement(method_call.getClassName(), method_call.getMethodName(), params, method_call.getSignature(), Enum.Methods.METHOD);
+
+                MethodElement new_node = null;
+                if (call_type == Enum.ExprCall.METHOD_CALL) {
+                    new_node = new MethodElement(class_name, method_name, params, signature, call_type);
+                }else if(call_type == Enum.ExprCall.CONSTRUCTOR_CALL) {
+                    new_node = new ConstructorElement(class_name, method_name, params, signature, call_type);
+                }
                 if (root == null) {
                     root = new_node;
-                    parents_stack.push(root);
                     current_parent = new_node; // = parents_stack.peek();
                 } else {
                     current_parent.addChild(new_node);
-                    parents_stack.push(new_node);
                 }
+                parents_stack.push(new_node);
             }else{
                 return;
             }
 
-            listCalledMethodsRecursive(method_call.getClassName(), method_call.getMethodName(), params, call_type,  list);
-            parents_stack.pop();
+            listCalledMethodsRecursive(class_name, method_name, params, call_type,  list);
+
+            if(keep_only != null && keep_only.contains(class_name)) {
+                parents_stack.pop();
+            }
         }
     }
 }
