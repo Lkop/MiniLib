@@ -23,7 +23,14 @@ public class PackageCreator {
 
     public void addToPackage(MethodElement node) {
         createPackageFolder(node.getClassPath());
-        class_creator.copyExistingMethod(node.getClassLongName(), node.getMethodName(), node.getParams());
+        switch (node.getType()){
+            case METHOD_CALL:
+                class_creator.copyExistingMethod(node.getClassLongName(), node.getMethodName(), node.getParams());
+                break;
+            case CONSTRUCTOR_CALL:
+                class_creator.copyExistingConstructor(node.getClassLongName(), node.getParams());
+                break;
+        }
         saveClassInPackage(node.getClassPath(), node.getClassLongName(), node.getClassName());
     }
 
