@@ -12,9 +12,12 @@ public class MethodElement extends VisitableBaseTreeElement {
     private String method_signature;
     private String unique_id;
     private String class_path;
-    private Enum.Methods type;
+    private Enum.ExprCall type;
 
-    public MethodElement(String class_longname, String method_name, CtClass[] params, String method_signature, Enum.Methods type) {
+    public MethodElement() {
+    }
+
+    public MethodElement(String class_longname, String method_name, CtClass[] params, String method_signature, Enum.ExprCall type) {
         this.class_longname = class_longname;
         this.class_name = StringUtils.longToShortClassname(class_longname);
         this.method_name = method_name;
@@ -50,7 +53,7 @@ public class MethodElement extends VisitableBaseTreeElement {
         return class_path;
     }
 
-    public Enum.Methods getType() {
+    public Enum.ExprCall getType() {
         return type;
     }
 
@@ -59,7 +62,7 @@ public class MethodElement extends VisitableBaseTreeElement {
     }
 
     public String getGraphvizName(){
-        return method_name+"_"+getSerialId();
+        return class_longname + "_" + method_name + "_" + getSerialId();
     }
 
     @Override
