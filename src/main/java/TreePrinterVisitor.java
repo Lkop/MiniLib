@@ -35,11 +35,11 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
         writer.println("\t}");
     }
 
-    public void openWriteGraph(){
+    @Override
+    public Integer visitStartingMethodElement(StartingMethodElement node) {
+        System.out.println("StartingMethodVisitableElement -> "+node.getMethodName());
         writer.println("digraph G {");
-    }
-
-    public void closeWriteGraph(){
+        super.visitStartingMethodElement(node);
         writer.println("}");
         writer.close();
 
@@ -48,12 +48,6 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
         }catch (IOException | InterruptedException e){
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public Integer visitStartingMethodElement(StartingMethodElement node) {
-        System.out.println("StartingMethodVisitableElement -> "+node.getMethodName());
-        super.visitStartingMethodElement(node);
         return 0;
     }
 
