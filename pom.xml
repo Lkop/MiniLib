@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.lkop</groupId>
-    <artifactId>MiniLib</artifactId>
-    <version>0.1</version>
+    <artifactId>minilib</artifactId>
+    <version>0.1.0</version>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
-            <version>3.27.0-GA</version>
+            <version>3.28.0-GA</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.apache.maven.resolver</groupId>-->
