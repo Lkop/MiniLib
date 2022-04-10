@@ -42,4 +42,8 @@ public class BaseTreeElement {
         }
         return children;
     }
+
+    public String getGraphvizName() {
+        return null;
+    }
 }

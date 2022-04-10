@@ -12,7 +12,7 @@ public class Main {
 
 
         InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile(new File( "L:\\Secret_Projects\\Java\\MiniLibWorkspace\\Client\\pom.xml" ));
+        request.setPomFile(new File("L:\\Secret_Projects\\Java\\MiniLibWorkspace\\Client\\pom.xml" ));
         request.setGoals(Collections.singletonList("clean install"));
 
         Invoker invoker = new DefaultInvoker();
@@ -75,7 +75,7 @@ public class Main {
         }
 
 
-        MethodElement method_tree = ci.getRoot();
+        ClassElement method_tree = ci.getRoot();
         System.out.println("Visiting -> Done");
 
         try {

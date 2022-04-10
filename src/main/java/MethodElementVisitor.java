@@ -6,6 +6,18 @@ public abstract class MethodElementVisitor<T> extends BaseVisitor<T> {
         return super.visitChildren(node);
     }
 
+    public T visitClassElement(ClassElement node) {
+        return super.visitChildren(node);
+    }
+
+    public T visitSuperclassElement(SuperclassElement node) {
+        return super.visitChildren(node);
+    }
+
+    public T visitInterfaceElement(InterfaceElement node) {
+        return super.visitChildren(node);
+    }
+
     public T visitMethodElement(MethodElement node) {
         return super.visitChildren(node);
     }
