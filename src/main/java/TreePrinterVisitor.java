@@ -14,7 +14,7 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
 
     public TreePrinterVisitor(String filename) throws FileNotFoundException {
         this.filename = filename;
-        writer = new PrintWriter("output/"+this.filename+".dot");
+        writer = new PrintWriter("output/" + this.filename+".dot");
     }
 
     private void extractSubgraphs(MethodElement node) {
@@ -37,7 +37,7 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
 
     @Override
     public Integer visitStartingMethodElement(StartingMethodElement node) {
-        System.out.println("StartingMethodVisitableElement -> "+node.getMethodName());
+        System.out.println("StartingMethodVisitableElement -> " + node.getMethodName());
         writer.println("digraph G {");
         super.visitStartingMethodElement(node);
         writer.println("}");
@@ -52,8 +52,34 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
     }
 
     @Override
+    public Integer visitClassElement(ClassElement node) {
+        System.out.println("ClassVisitableElement -> " + node.getClassLongName());
+        writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
+        super.visitClassElement(node);
+        return 0;
+    }
+
+    @Override
+    public Integer visitSuperclassElement(SuperclassElement node) {
+        System.out.println("SuperclassVisitableElement -> " + node.getSuperclassName());
+        writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
+        writer.println("\"" + node.getGraphvizName() + "\"" + " [style=filled, fillcolor=\"#ffa500\"];");
+        super.visitSuperclassElement(node);
+        return 0;
+    }
+
+    @Override
+    public Integer visitInterfaceElement(InterfaceElement node) {
+        System.out.println("InterfaceVisitableElement -> " + node.getInterfaceName());
+        writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
+        writer.println("\"" + node.getGraphvizName() + "\"" + " [style=filled, fillcolor=\"yellow\"];");
+        super.visitInterfaceElement(node);
+        return 0;
+    }
+
+    @Override
     public Integer visitMethodElement(MethodElement node) {
-        System.out.println("MethodVisitableElement -> "+node.getMethodName());
+        System.out.println("MethodVisitableElement -> " + node.getMethodName());
 //        pos.push(0);
 //        extractSubgraphs(node);
 //        pos.pop();
@@ -66,7 +92,7 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
 
     @Override
     public Integer visitConstructorElement(ConstructorElement node) {
-        System.out.println("ConstructorVisitableElement -> "+node.getMethodName());
+        System.out.println("ConstructorVisitableElement -> " + node.getMethodName());
 //        pos.push(0);
 //        extractSubgraphs(node);
 //        pos.pop();
