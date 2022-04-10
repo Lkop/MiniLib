@@ -20,6 +20,7 @@ public class ClassInsider {
 
     private List<String> keep_only_classes;
     private List<String> one_time_methods;
+    private List<String> one_time_extras;
 
     public ClassInsider(String jar_path) {
         class_pool = ClassPool.getDefault();
@@ -69,6 +70,7 @@ public class ClassInsider {
     public List listCalledMethods(List<String> keep_only) throws NotFoundException {
         this.keep_only_classes = keep_only;
         this.one_time_methods = new ArrayList<>();
+        this.one_time_extras = new ArrayList<>();
 
         List<ClassInfo> m_list = new ArrayList<>();
 
@@ -223,6 +225,8 @@ public class ClassInsider {
                     current_parent.addChild(new_node);
                 }
                 parents_stack.push(new_node);
+
+                checkForExtras(class_name);
             }else{
                 return;
             }
@@ -232,6 +236,33 @@ public class ClassInsider {
             if(keep_only_classes != null && keep_only_classes.contains(class_name)) {
                 parents_stack.pop();
             }
+        }
+    }
+
+    private void checkForExtras(String class_name) {
+        try {
+            CtClass ct_class = class_pool.get(class_name);
+
+            CtClass superclass = ct_class.getSuperclass();
+            String inline_id = class_name + "+" + superclass.getName();
+            if(!superclass.getName().equals("java.lang.Object") && !one_time_extras.contains(inline_id)){
+                SuperclassElement superclass_node = new SuperclassElement(class_name, superclass.getName());
+                parents_stack.peek().addChild(superclass_node);
+                one_time_extras.add(inline_id);
+            }
+
+            CtClass[] interfaces = ct_class.getInterfaces();
+            for (int i=0; i < interfaces.length; i++) {
+                inline_id = class_name + "+" + interfaces[i].getName();
+
+                if(!one_time_extras.contains(inline_id)) {
+                    InterfaceElement interfaces_node = new InterfaceElement(class_name, interfaces[i].getName());
+                    parents_stack.peek().addChild(interfaces_node);
+                    one_time_extras.add(inline_id);
+                }
+            }
+        } catch (NotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
