@@ -13,12 +13,13 @@ public class ClassInsider {
     private String starting_class;
     private String starting_method;
     private CtClass[] params;
-    private MethodElement root = null;
-    private MethodElement current_parent = null;
-    private Stack<MethodElement> parents_stack = new Stack<>();
+    private ClassElement root = null;
+    private ClassElement current_parent = null;
+    private Stack<ClassElement> parents_stack = new Stack<>();
+    private String previous_class = null;
 
-    private List<String> keep_only;
-    private List<String> one_time;
+    private List<String> keep_only_classes;
+    private List<String> one_time_methods;
 
     public ClassInsider(String jar_path) {
         class_pool = ClassPool.getDefault();
@@ -42,7 +43,7 @@ public class ClassInsider {
         }
     }
 
-    public MethodElement getRoot() {
+    public ClassElement getRoot() {
         return root;
     }
 
@@ -66,8 +67,8 @@ public class ClassInsider {
     }
 
     public List listCalledMethods(List<String> keep_only) throws NotFoundException {
-        this.keep_only = keep_only;
-        this.one_time = new ArrayList<>();
+        this.keep_only_classes = keep_only;
+        this.one_time_methods = new ArrayList<>();
 
         List<ClassInfo> m_list = new ArrayList<>();
 
@@ -203,10 +204,10 @@ public class ClassInsider {
             }
         }
 
-        if(keep_only != null && keep_only.contains(class_name)) {
+        if(keep_only_classes != null && keep_only_classes.contains(class_name)) {
             String inline_info = class_name + "+" + method_name + "+" + signature;
-            if(!one_time.contains(inline_info)) {
-                one_time.add(inline_info);
+            if(!one_time_methods.contains(inline_info)) {
+                one_time_methods.add(inline_info);
                 System.out.println(inline_info);
 
                 MethodElement new_node = null;
@@ -228,7 +229,7 @@ public class ClassInsider {
 
             listCalledMethodsRecursive(class_name, method_name, params, call_type,  list);
 
-            if(keep_only != null && keep_only.contains(class_name)) {
+            if(keep_only_classes != null && keep_only_classes.contains(class_name)) {
                 parents_stack.pop();
             }
         }
