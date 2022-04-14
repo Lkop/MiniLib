@@ -21,23 +21,23 @@ public class PackageCreator {
         this.new_classpool = class_creator.getNewClassPool();
     }
 
-    public void addToPackage(MethodElement node) {
     public void addInterface(InterfaceElement node) {
         createPackageFolder(node.getClassPath());
         class_creator.copyExistingInterface(node.getInterfaceLongName(), node.getParentClass().getClassLongName());
         saveClassesInPackage(node, node.getParentClass());
     }
 
+    public void addMethod(MethodElement node) {
         createPackageFolder(node.getClassPath());
         switch (node.getType()){
             case METHOD_CALL:
-                class_creator.copyExistingMethod(node.getClassLongName(), node.getMethodName(), node.getParams());
+                class_creator.copyExistingMethod(node.getClassLongName(), node.getMethodName(), node.getMethodParams());
                 break;
             case CONSTRUCTOR_CALL:
-                class_creator.copyExistingConstructor(node.getClassLongName(), node.getParams());
+                class_creator.copyExistingConstructor(node.getClassLongName(), node.getMethodParams());
                 break;
         }
-        saveClassInPackage(node.getClassPath(), node.getClassLongName(), node.getClassName());
+        saveClassesInPackage(node);
     }
 
     private void createPackageFolder(String folder_path) {

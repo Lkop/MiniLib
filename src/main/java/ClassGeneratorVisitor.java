@@ -23,7 +23,7 @@ public class ClassGeneratorVisitor extends MethodElementVisitor<Integer> {
     @Override
     public Integer visitMethodElement(MethodElement node) {
         System.out.println("Copying: " + node.getClassLongName() + " -> " + node.getMethodName() + "()");
-        pc.addToPackage(node);
+        pc.addMethod(node);
         super.visitMethodElement(node);
         return 0;
     }
@@ -31,7 +31,7 @@ public class ClassGeneratorVisitor extends MethodElementVisitor<Integer> {
     @Override
     public Integer visitConstructorElement(ConstructorElement node) {
         System.out.println("Copying constructor: " + node.getClassLongName() + " -> " + node.getMethodName() + "()");
-        pc.addToPackage(node);
+        pc.addMethod(node);
         super.visitConstructorElement(node);
         return 0;
     }
