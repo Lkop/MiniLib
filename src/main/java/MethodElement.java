@@ -41,7 +41,7 @@ public class MethodElement extends ClassElement {
     }
 
     public String getGraphvizName(){
-        return getClassLongName() + "_" + method_name + "_" + getSerialId();
+        return getClassLongName() + " <-- " + method_name + "(...) (" + getSerialId() + ")";
     }
 
     @Override

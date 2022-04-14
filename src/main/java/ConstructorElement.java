@@ -8,7 +8,7 @@ public class ConstructorElement extends MethodElement{
     }
 
     public String getGraphvizName(){
-        return getClassLongName() + "_constructor_"+getSerialId();
+        return getClassLongName() + " <-- CONSTRUCTOR(...) (" + getSerialId() + ")";
     }
 
     @Override

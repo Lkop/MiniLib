@@ -18,7 +18,7 @@ public class InterfaceElement extends ClassElement {
     }
 
     public String getGraphvizName(){
-        return getClassLongName() + " implements " + interface_longname + " (" + getSerialId() + ")";
+        return parent_class.getClassLongName() + " implements " + getClassLongName() + " (" + getSerialId() + ")";
     }
 
     @Override
