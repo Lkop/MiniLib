@@ -1,17 +1,20 @@
-import javassist.CtClass;
 import treecomponents.BaseVisitor;
 
 public class InterfaceElement extends ClassElement {
 
-    private String interface_longname;
+    private ClassElement parent_class;
 
-    public InterfaceElement(String class_longname, String interface_longname) {
-        super(class_longname);
-        this.interface_longname = interface_longname;
+    public InterfaceElement(String interface_longname, String parent_longname) {
+        super(interface_longname);
+        this.parent_class = new ClassElement(parent_longname);
     }
 
-    public String getInterfaceName() {
-        return interface_longname;
+    public ClassElement getParentClass() {
+        return parent_class;
+    }
+
+    public String getInterfaceLongName() {
+        return getClassLongName();
     }
 
     public String getGraphvizName(){
