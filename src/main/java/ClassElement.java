@@ -13,6 +13,10 @@ public class ClassElement extends VisitableBaseTreeElement {
     }
 
     public ClassElement(String class_longname) {
+        resettingClassname(class_longname);
+    }
+
+    public void resettingClassname(String class_longname) {
         this.class_longname = class_longname;
         this.class_name = StringUtils.longToShortClassname(class_longname);
         this.class_path = StringUtils.classToPath(class_longname);
