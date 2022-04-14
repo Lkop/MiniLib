@@ -11,11 +11,11 @@ public class ClassCreator {
         this.new_classpool.appendClassPath(new LoaderClassPath(this.old_classpool.getClassLoader()));
     }
 
-    public boolean copyExistingMethod(String class_longname, String method_name, CtClass[] params) {
     public ClassPool getNewClassPool() {
         return new_classpool;
     }
 
+    public boolean copyExistingSuperclass(String class_longname, String method_name, CtClass[] params) {
         initializeCtClass(class_longname);
         try {
             CtClass old_class = old_classpool.getCtClass(class_longname);
@@ -36,6 +36,19 @@ public class ClassCreator {
             CtClass parent_class = new_classpool.getCtClass(parent_longname);
             parent_class.addInterface(new_class);
         }catch(NotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean copyExistingMethod(String class_longname, String method_name, CtClass[] params) {
+        initializeCtClass(class_longname);
+        try {
+            CtClass old_class = old_classpool.getCtClass(class_longname);
+            CtMethod old_method = old_class.getDeclaredMethod(method_name, params);
+            CtMethod new_method = CtNewMethod.copy(old_method, new_class, null);
+            new_class.addMethod(new_method);
+        }catch(CannotCompileException | NotFoundException e) {
             e.printStackTrace();
         }
         return true;
