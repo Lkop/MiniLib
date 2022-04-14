@@ -22,6 +22,12 @@ public class PackageCreator {
     }
 
     public void addToPackage(MethodElement node) {
+    public void addInterface(InterfaceElement node) {
+        createPackageFolder(node.getClassPath());
+        class_creator.copyExistingInterface(node.getInterfaceLongName(), node.getParentClass().getClassLongName());
+        saveClassesInPackage(node, node.getParentClass());
+    }
+
         createPackageFolder(node.getClassPath());
         switch (node.getType()){
             case METHOD_CALL:
@@ -35,17 +41,18 @@ public class PackageCreator {
     }
 
     private void createPackageFolder(String folder_path) {
-        File folder = new File(root_path + "\\" + folder_path);
-        folder.mkdirs();
+        new File(root_path + "\\" + folder_path).mkdirs();
     }
 
-    private void saveClassInPackage(String class_path, String class_longname, String class_name) {
-        try {
-            ClassFile cf = new_classpool.get(class_longname).getClassFile();
-            File file = new File(root_path + "\\" + class_path + "\\" + class_name + ".class");
-            cf.write(new DataOutputStream(new FileOutputStream(file)));
-        }catch (NotFoundException | IOException e) {
-            e.printStackTrace();
+    private void saveClassesInPackage(ClassElement... class_nodes) {
+        for (ClassElement class_node : class_nodes) {
+            try {
+                ClassFile cf = new_classpool.get(class_node.getClassLongName()).getClassFile();
+                File file = new File(root_path + "\\" + class_node.getClassPath() + "\\" + class_node.getClassName() + ".class");
+                cf.write(new DataOutputStream(new FileOutputStream(file)));
+            }catch (NotFoundException | IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

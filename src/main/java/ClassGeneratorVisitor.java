@@ -13,6 +13,14 @@ public class ClassGeneratorVisitor extends MethodElementVisitor<Integer> {
     }
 
     @Override
+    public Integer visitInterfaceElement(InterfaceElement node) {
+        System.out.println("Copying interface: " + node.getInterfaceLongName());
+        pc.addInterface(node);
+        super.visitInterfaceElement(node);
+        return 0;
+    }
+
+    @Override
     public Integer visitMethodElement(MethodElement node) {
         System.out.println("Copying: " + node.getClassLongName() + " -> " + node.getMethodName() + "()");
         pc.addToPackage(node);

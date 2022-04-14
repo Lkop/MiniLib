@@ -12,12 +12,30 @@ public class ClassCreator {
     }
 
     public boolean copyExistingMethod(String class_longname, String method_name, CtClass[] params) {
+    public ClassPool getNewClassPool() {
+        return new_classpool;
+    }
+
         initializeCtClass(class_longname);
         try {
             CtClass old_class = old_classpool.getCtClass(class_longname);
             CtMethod old_method = old_class.getDeclaredMethod(method_name, params);
             new_class.addMethod(CtNewMethod.copy(old_method, new_class, null));
         }catch(CannotCompileException | NotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean copyExistingInterface(String interface_longname, String parent_longname) {
+        try {
+            CtClass old_class = old_classpool.getCtClass(interface_longname);
+            new_classpool.makeClass(old_class.getClassFile2());
+
+            new_class = new_classpool.getCtClass(interface_longname);
+            CtClass parent_class = new_classpool.getCtClass(parent_longname);
+            parent_class.addInterface(new_class);
+        }catch(NotFoundException e) {
             e.printStackTrace();
         }
         return true;
@@ -33,10 +51,6 @@ public class ClassCreator {
             e.printStackTrace();
         }
         return true;
-    }
-
-    public ClassPool getNewClassPool() {
-        return new_classpool;
     }
 
     private CtClass initializeCtClass(String class_longname) {
