@@ -63,14 +63,14 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
     public Integer visitSuperclassElement(SuperclassElement node) {
         System.out.println("SuperclassVisitableElement -> " + node.getSuperclassName());
         writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
-        writer.println("\"" + node.getGraphvizName() + "\"" + " [style=filled, fillcolor=\"#ffa500\"];");
+        writer.println("\"" + node.getGraphvizName() + "\"" + " [style=filled, fillcolor=\"#ff3232\"];");
         super.visitSuperclassElement(node);
         return 0;
     }
 
     @Override
     public Integer visitInterfaceElement(InterfaceElement node) {
-        System.out.println("InterfaceVisitableElement -> " + node.getInterfaceName());
+        System.out.println("InterfaceVisitableElement -> " + node.getInterfaceLongName());
         writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
         writer.println("\"" + node.getGraphvizName() + "\"" + " [style=filled, fillcolor=\"yellow\"];");
         super.visitInterfaceElement(node);
@@ -80,12 +80,8 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
     @Override
     public Integer visitMethodElement(MethodElement node) {
         System.out.println("MethodVisitableElement -> " + node.getMethodName());
-//        pos.push(0);
-//        extractSubgraphs(node);
-//        pos.pop();
-        if(node.getSerialId() != 0) {
-            writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
-        }
+        writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
+        writer.println("\"" + node.getGraphvizName() + "\"" + " [style=filled, fillcolor=\"#cfe2f3\"];");
         super.visitMethodElement(node);
         return 0;
     }
@@ -93,12 +89,8 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
     @Override
     public Integer visitConstructorElement(ConstructorElement node) {
         System.out.println("ConstructorVisitableElement -> " + node.getMethodName());
-//        pos.push(0);
-//        extractSubgraphs(node);
-//        pos.pop();
-        if(node.getSerialId() != 0) {
-            writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
-        }
+        writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
+        writer.println("\"" + node.getGraphvizName() + "\"" + " [style=filled, fillcolor=\"#6fa8dc\"];");
         super.visitConstructorElement(node);
         return 0;
     }
