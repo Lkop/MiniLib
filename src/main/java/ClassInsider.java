@@ -17,6 +17,7 @@ public class ClassInsider {
     private ClassElement current_parent = null;
     private Stack<ClassElement> parents_stack = new Stack<>();
     private String previous_class = null;
+    private MethodElement new_node;                 //Accessing previous element to change parent superclass
 
     private List<String> keep_only_classes;
     private List<String> one_time_methods;
@@ -192,7 +193,24 @@ public class ClassInsider {
                     }
 
                 });
-        }catch (NotFoundException | CannotCompileException e) {
+        }catch (NotFoundException e) {
+            try {
+                one_time_methods.remove(one_time_methods.size() - 1);
+                String superclass_name = class_pool.get(class_name).getSuperclass().getName();
+                new_node.resettingClassname(superclass_name);
+
+                String inline_info = superclass_name + "+" + new_node.getMethodName() + "+" + new_node.getMethodSignature();
+                if (!one_time_methods.contains(inline_info)) {
+                    listCalledMethodsRecursive(superclass_name, starting_method, params, type, list);
+                    one_time_methods.add(inline_info);
+                }else{
+                    List<BaseTreeElement> children = new_node.getFirstParent().getChildren();
+                    children.remove(children.size() - 1);
+                }
+            } catch (NotFoundException ex) {
+                ex.printStackTrace();
+            }
+        } catch (CannotCompileException e) {
             e.printStackTrace();
         }
     }
@@ -212,7 +230,7 @@ public class ClassInsider {
                 one_time_methods.add(inline_info);
                 System.out.println(inline_info);
 
-                MethodElement new_node = null;
+                new_node = null;
                 if (call_type == Enum.ExprCall.METHOD_CALL) {
                     new_node = new MethodElement(class_name, method_name, params, signature, call_type);
                 }else if(call_type == Enum.ExprCall.CONSTRUCTOR_CALL) {
