@@ -1,7 +1,5 @@
 import javassist.CtClass;
 import treecomponents.BaseVisitor;
-import treecomponents.VisitableBaseTreeElement;
-import utils.StringUtils;
 
 public class MethodElement extends ClassElement {
 
@@ -28,8 +26,12 @@ public class MethodElement extends ClassElement {
         return method_name;
     }
 
-    public CtClass[] getParams() {
+    public CtClass[] getMethodParams() {
         return params;
+    }
+
+    public String getMethodSignature() {
+        return method_signature;
     }
 
     public String getUniqueId() {
