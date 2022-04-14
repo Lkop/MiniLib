@@ -274,7 +274,7 @@ public class ClassInsider {
                 inline_id = class_name + "+" + interfaces[i].getName();
 
                 if(!one_time_extras.contains(inline_id)) {
-                    InterfaceElement interfaces_node = new InterfaceElement(class_name, interfaces[i].getName());
+                    InterfaceElement interfaces_node = new InterfaceElement(interfaces[i].getName(), class_name);
                     parents_stack.peek().addChild(interfaces_node);
                     one_time_extras.add(inline_id);
                 }
