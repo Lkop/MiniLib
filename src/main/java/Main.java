@@ -79,8 +79,8 @@ public class Main {
         System.out.println("Visiting -> Done");
 
         try {
-            TreePrinterVisitor tree_printer = new TreePrinterVisitor("ast");
             tree_printer.openWriteGraph();
+            TreePrinterVisitor tree_printer = new TreePrinterVisitor("mini-tree");
             ci.getRoot().accept(tree_printer);
             tree_printer.closeWriteGraph();
             System.out.println("Printing -> Done");
