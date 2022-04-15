@@ -1,22 +1,24 @@
-import javassist.CtClass;
 import treecomponents.BaseVisitor;
 
 public class SuperclassElement extends ClassElement {
 
+    private ClassElement parent_class;
 
-    private String superclass_longname;
-
-    public SuperclassElement(String class_longname, String superclass_longname) {
-        super(class_longname);
-        this.superclass_longname = superclass_longname;
+    public SuperclassElement(String superclass_longname, String parent_longname) {
+        super(superclass_longname);
+        this.parent_class = new ClassElement(parent_longname);
     }
 
-    public String getSuperclassName() {
-        return this.superclass_longname;
+    public ClassElement getParentClass() {
+        return parent_class;
+    }
+
+    public String getSuperclassLongName() {
+        return getClassLongName();
     }
 
     public String getGraphvizName(){
-        return getClassLongName() + " extends " + superclass_longname + " (" + getSerialId() + ")";
+        return parent_class.getClassLongName() + " extends " + getClassLongName() + " (" + getSerialId() + ")";
     }
 
     @Override
