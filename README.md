@@ -23,7 +23,7 @@ Specify `out\artifacts\MiniLib\minilib.jar` path in `<systemPath>`
 class MyTestClass {
 
     @Test
-    + @MiniLib
++   @MiniLib
     void MyTestMethod() {
         //My code...
     }
