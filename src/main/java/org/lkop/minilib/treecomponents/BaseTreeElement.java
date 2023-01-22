@@ -1,4 +1,4 @@
-package treecomponents;
+package org.lkop.minilib.treecomponents;
 
 import java.util.ArrayList;
 import java.util.List;

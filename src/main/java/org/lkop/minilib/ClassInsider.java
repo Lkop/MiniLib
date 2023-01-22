@@ -1,10 +1,15 @@
-import constants.Constants;
+package org.lkop.minilib;
+
+
 import javassist.bytecode.BadBytecode;
 import javassist.bytecode.SignatureAttribute;
 import javassist.expr.*;
-import models.ClassInfo;
+
 import javassist.*;
-import treecomponents.BaseTreeElement;
+import org.lkop.minilib.constants.Constants;
+import org.lkop.minilib.models.ClassInfo;
+import org.lkop.minilib.treecomponents.BaseTreeElement;
+
 
 import java.io.File;
 import java.util.*;

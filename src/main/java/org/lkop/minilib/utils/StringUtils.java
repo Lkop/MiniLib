@@ -1,4 +1,4 @@
-package utils;
+package org.lkop.minilib.utils;
 
 public class StringUtils {
 

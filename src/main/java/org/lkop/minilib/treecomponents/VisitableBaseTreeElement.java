@@ -1,4 +1,4 @@
-package treecomponents;
+package org.lkop.minilib.treecomponents;
 
 public class VisitableBaseTreeElement extends BaseTreeElement implements Visitable{
 

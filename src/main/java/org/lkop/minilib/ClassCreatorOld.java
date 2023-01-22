@@ -1,3 +1,5 @@
+package org.lkop.minilib;
+
 import javassist.*;
 import javassist.bytecode.ClassFile;
 import java.io.*;

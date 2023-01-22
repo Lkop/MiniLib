@@ -1,4 +1,4 @@
-package models;
+package org.lkop.minilib.models;
 
 public class ClassInfo {
 

@@ -1,4 +1,4 @@
-package treecomponents;
+package org.lkop.minilib.treecomponents;
 
 public abstract class BaseVisitor<T> implements TreeVisitor {
 

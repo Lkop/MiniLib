@@ -1,4 +1,6 @@
-import treecomponents.BaseVisitor;
+package org.lkop.minilib;
+
+import org.lkop.minilib.treecomponents.BaseVisitor;
 
 public class InterfaceElement extends ClassElement {
 

@@ -1,4 +1,4 @@
-package utils;
+package org.lkop.minilib.utils;
 
 import java.io.IOException;
 

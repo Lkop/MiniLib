@@ -1,6 +1,8 @@
-import treecomponents.BaseVisitor;
-import treecomponents.VisitableBaseTreeElement;
-import utils.StringUtils;
+package org.lkop.minilib;
+
+import org.lkop.minilib.treecomponents.BaseVisitor;
+import org.lkop.minilib.treecomponents.VisitableBaseTreeElement;
+import org.lkop.minilib.utils.StringUtils;
 
 public class ClassElement extends VisitableBaseTreeElement {
 

@@ -1,6 +1,6 @@
-import treecomponents.BaseVisitor;
+package org.lkop.minilib;
 
-import java.util.List;
+import org.lkop.minilib.treecomponents.BaseVisitor;
 
 public class StartingMethodElement extends MethodElement{
 

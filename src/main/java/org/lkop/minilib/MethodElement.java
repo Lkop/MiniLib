@@ -1,5 +1,7 @@
+package org.lkop.minilib;
+
 import javassist.CtClass;
-import treecomponents.BaseVisitor;
+import org.lkop.minilib.treecomponents.BaseVisitor;
 
 public class MethodElement extends ClassElement {
 

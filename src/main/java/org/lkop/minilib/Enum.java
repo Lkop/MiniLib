@@ -1,3 +1,5 @@
+package org.lkop.minilib;
+
 public class Enum {
     public enum Fields {
 

@@ -1,5 +1,7 @@
-import annotations.AnnotationParser;
+package org.lkop.minilib;
+
 import org.apache.maven.shared.invoker.*;
+import org.lkop.minilib.annotations.AnnotationParser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;

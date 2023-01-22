@@ -1,5 +1,7 @@
-import treecomponents.BaseTreeElement;
-import utils.ImageUtils;
+package org.lkop.minilib;
+
+import org.lkop.minilib.treecomponents.BaseTreeElement;
+import org.lkop.minilib.utils.ImageUtils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;

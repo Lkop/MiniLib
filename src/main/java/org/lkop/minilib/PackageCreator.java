@@ -1,3 +1,5 @@
+package org.lkop.minilib;
+
 import javassist.ClassPool;
 import javassist.NotFoundException;
 import javassist.bytecode.ClassFile;
