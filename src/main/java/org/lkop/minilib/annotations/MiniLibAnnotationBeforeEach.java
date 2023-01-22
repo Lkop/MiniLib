@@ -1,7 +1,8 @@
-package annotations;
+package org.lkop.minilib.annotations;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
@@ -18,4 +19,9 @@ public class MiniLibAnnotationBeforeEach implements BeforeEachCallback {
             ap.runAnnotationParsing(test_class.get(), test_method.get());
         }
     }
+
+//    @Override
+//    public void postProcessTestInstance(Object o, ExtensionContext extensionContext) throws Exception {
+//        //System.out.println("asdasdasdasd212343243444444444444444444444444");
+//    }
 }

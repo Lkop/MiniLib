@@ -3,11 +3,6 @@ public class Enum {
 
     }
 
-    public enum Methods {
-        CONSTRUCTOR,
-        METHOD
-    }
-
     public enum ExprCall {
         NEWEXPR_CALL,
         NEWARRAY_CALL,

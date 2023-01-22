@@ -4,7 +4,6 @@
 
 ### Maven
 
-Add this in your `pom.xml`
 ```
 <dependency>
     <groupId>org.lkop</groupId>
@@ -14,9 +13,15 @@ Add this in your `pom.xml`
     <systemPath>YOUR_PATH/minilib.jar</systemPath>
 </dependency>
 ```
-Specify `out\artifacts\MiniLib\minilib.jar` path in `<systemPath>`
+Specify `out\artifacts\MiniLib\minilib.jar` path in `<systemPath>`.
 
 ## How To Use
+
+### Main
+
+### Tests
+
+Add `@MiniLib` annotation in each test you want to be parsed.
 
 ```diff
 + @ExtendWith(MiniLibAnnotationBeforeEach.class)

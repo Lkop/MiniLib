@@ -9,26 +9,41 @@ import java.io.IOException;
 
 public class PackageCreator {
 
-    private String root_path = "output\\Generated";
-    private int counter;
+    private String root_path;
     private ClassCreator class_creator;
     private ClassPool new_classpool;
 
-    public PackageCreator() {
+    public PackageCreator(String root_path) {
+        this.root_path = root_path;
         deleteRootFolder();
-        this.counter = 0;
         this.class_creator = new ClassCreator();
         this.new_classpool = class_creator.getNewClassPool();
     }
 
+    public void parseGeneralInfo(StartingMethodElement node) {
+        class_creator.parseGeneralInfo(node.getGeneralInfo());
+    }
+
+    public void addEmptyFieldsClass(EmptyClassElement node) {
+        createPackageFolder(node);
+        class_creator.addEmptyFieldClass(node.getClassLongName());
+        saveClassesInPackage(node);
+    }
+
+    public void addSuperclass(SuperclassElement node) {
+        createPackageFolder(node, node.getParentClass());
+        class_creator.copyExistingSuperclass(node.getSuperclassLongName(), node.getParentClass().getClassLongName());
+        saveClassesInPackage(node, node.getParentClass());
+    }
+
     public void addInterface(InterfaceElement node) {
-        createPackageFolder(node.getClassPath());
+        createPackageFolder(node, node.getParentClass());
         class_creator.copyExistingInterface(node.getInterfaceLongName(), node.getParentClass().getClassLongName());
         saveClassesInPackage(node, node.getParentClass());
     }
 
     public void addMethod(MethodElement node) {
-        createPackageFolder(node.getClassPath());
+        createPackageFolder(node);
         switch (node.getType()){
             case METHOD_CALL:
                 class_creator.copyExistingMethod(node.getClassLongName(), node.getMethodName(), node.getMethodParams());
@@ -40,8 +55,10 @@ public class PackageCreator {
         saveClassesInPackage(node);
     }
 
-    private void createPackageFolder(String folder_path) {
-        new File(root_path + "\\" + folder_path).mkdirs();
+    private void createPackageFolder(ClassElement... class_nodes) {
+        for (ClassElement class_node : class_nodes) {
+            new File(root_path + "\\" + class_node.getClassPath()).mkdirs();
+        }
     }
 
     private void saveClassesInPackage(ClassElement... class_nodes) {

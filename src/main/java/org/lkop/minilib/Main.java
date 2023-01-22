@@ -1,4 +1,4 @@
-import javassist.ClassPool;
+import annotations.AnnotationParser;
 import org.apache.maven.shared.invoker.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,22 +8,29 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        ClassPool cp2 = ClassPool.getDefault();
+        AnnotationParser ap = new AnnotationParser();
 
+
+        //ClassPool cp2 = ClassPool.getDefault();
+
+        new File("C:\\Users\\Loukas\\Desktop\\new").mkdirs();
 
         InvocationRequest request = new DefaultInvocationRequest();
-        request.setPomFile(new File("L:\\Secret_Projects\\Java\\MiniLibWorkspace\\Client\\pom.xml" ));
+        request.setPomFile(new File("L:\\Secret_Projects\\MiniLib_workspace\\Client\\pom.xml" ));
         request.setGoals(Collections.singletonList("clean install"));
 
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome(new File("C:\\Program Files\\Maven\\apache-maven-3.8.3"));
         invoker.setLocalRepositoryDirectory(new File("C:\\Users\\Loukas\\Desktop\\new"));
 
-        try {
-            invoker.execute(request);
-        } catch (MavenInvocationException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            invoker.execute(request);
+//        } catch (MavenInvocationException e) {
+//            e.printStackTrace();
+//        }
+
+
+
 
 //        System.out.println(request.getBaseDirectory());
 //        System.out.println(request.getGlobalSettingsFile());
@@ -68,34 +75,23 @@ public class Main {
         ClassInsider ci = new ClassInsider(jar_list);
         //ClassInsider ci = new ClassInsider("L:\\Secret_Projects\\Java\\MiniLibWorkspace\\Client\\out\\artifacts\\Client_jar\\Client.jar");
         ci.assignStartingMethod("Main", "main");
-        try {
-            ci.listCalledMethods(classes_list);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        ci.listCalledMethods(classes_list);
+
 
 
         ClassElement method_tree = ci.getRoot();
+        ((StartingMethodElement)method_tree).setGeneralInfo(new GeneralInfo(ci.getOneTimeClasses()));
         System.out.println("Visiting -> Done");
 
-        try {
-            tree_printer.openWriteGraph();
-            TreePrinterVisitor tree_printer = new TreePrinterVisitor("mini-tree");
-            ci.getRoot().accept(tree_printer);
-            tree_printer.closeWriteGraph();
-            System.out.println("Printing -> Done");
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        TreePrinterVisitor tree_printer = new TreePrinterVisitor("mini-tree");
+        //tree_printer.openWriteGraph();
+        ci.getRoot().accept(tree_printer);
+        //tree_printer.closeWriteGraph();
+        System.out.println("Printing -> Done");
 
-        try {
-            ClassGeneratorVisitor cgv = new ClassGeneratorVisitor("Generated");
-            ci.getRoot().accept(cgv);
-            //cgv.createClassFile();
-            System.out.println("Generating -> Done");
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        ClassGeneratorVisitor cgv = new ClassGeneratorVisitor("output\\Generated");
+        ci.getRoot().accept(cgv);
+        //cgv.createClassFile();
+        System.out.println("Generating -> Done");
     }
 }

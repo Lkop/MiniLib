@@ -1,9 +1,21 @@
 import treecomponents.BaseVisitor;
 
+import java.util.List;
+
 public class StartingMethodElement extends MethodElement{
+
+    private GeneralInfo general_info;
 
     public StartingMethodElement() {
         super();
+    }
+
+    public GeneralInfo getGeneralInfo() {
+        return general_info;
+    }
+
+    public void setGeneralInfo(GeneralInfo general_info) {
+        this.general_info = general_info;
     }
 
     public String getGraphvizName(){

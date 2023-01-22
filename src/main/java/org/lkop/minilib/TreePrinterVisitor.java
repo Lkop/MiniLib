@@ -34,6 +34,21 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
         //writer.println("\n\t\tlabel=" + context_names[context] + ";");
         writer.println("\t}");
     }
+//
+//    public void openWriteGraph(){
+//        writer.println("digraph G {");
+//    }
+//
+//    public void closeWriteGraph(){
+//        writer.println("}");
+//        writer.close();
+//
+//        try {
+//            ImageUtils.createGIF(filename);
+//        }catch (IOException | InterruptedException e){
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public Integer visitStartingMethodElement(StartingMethodElement node) {
@@ -60,8 +75,16 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
     }
 
     @Override
+    public Integer visitEmptyClassElement(EmptyClassElement node) {
+        System.out.println("EmptyClassVisitableElement -> " + node.getClassLongName());
+        writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
+        super.visitClassElement(node);
+        return 0;
+    }
+
+    @Override
     public Integer visitSuperclassElement(SuperclassElement node) {
-        System.out.println("SuperclassVisitableElement -> " + node.getSuperclassName());
+        System.out.println("SuperclassVisitableElement -> " + node.getSuperclassLongName());
         writer.println("\"" + node.getFirstParent().getGraphvizName() + "\"->\"" + node.getGraphvizName() + "\";");
         writer.println("\"" + node.getGraphvizName() + "\"" + " [style=filled, fillcolor=\"#ff3232\"];");
         super.visitSuperclassElement(node);

@@ -1,4 +1,4 @@
-package annotations;
+package org.lkop.minilib.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
