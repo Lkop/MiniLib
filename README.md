@@ -25,6 +25,8 @@ Add `@MiniLib` annotation in each test you want to be parsed.
 
 ```diff
 + @ExtendWith(MiniLibAnnotationBeforeEach.class)
++ @MiniLibFolder("---- DEPENDENCIES PATH (eg. C:/Users/MyUser/.m2) ----")
++ @MiniLibOutputFolder("---- OUTPUT PATH (default "./" ) ----") <-- if removed, default "./" will be applied
 class MyTestClass {
 
     @Test
