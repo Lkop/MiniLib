@@ -7,8 +7,6 @@ public class AnnotationParser {
 
     MiniLibEngine minilib_engine = new MiniLibEngine();
 
-    public void runAnnotationParsing(Class<?> clazz, Method method) {
-        if (!method.isAnnotationPresent(MiniLib.class)) {
 
     public void parseFolderAnnotations(Class<?> clazz) {
         if (clazz.isAnnotationPresent(MiniLibDependenciesFolder.class)) {
@@ -21,6 +19,9 @@ public class AnnotationParser {
             minilib_engine.setOutputFolder(folder.value());
         }
     }
+
+    public void parseMethodAnnotation(Class<?> clazz, Method method) {
+        if (method.isAnnotationPresent(MiniLib.class)) {
             minilib_engine.generateCode(clazz, method);
         }
     }
