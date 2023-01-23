@@ -9,6 +9,18 @@ public class AnnotationParser {
 
     public void runAnnotationParsing(Class<?> clazz, Method method) {
         if (!method.isAnnotationPresent(MiniLib.class)) {
+
+    public void parseFolderAnnotations(Class<?> clazz) {
+        if (clazz.isAnnotationPresent(MiniLibDependenciesFolder.class)) {
+            MiniLibDependenciesFolder folder = clazz.getAnnotation(MiniLibDependenciesFolder.class);
+            minilib_engine.setDependenciesFolder(folder.value());
+        }
+
+        if (clazz.isAnnotationPresent(MiniLibOutputFolder.class)) {
+            MiniLibOutputFolder folder = clazz.getAnnotation(MiniLibOutputFolder.class);
+            minilib_engine.setOutputFolder(folder.value());
+        }
+    }
             minilib_engine.generateCode(clazz, method);
         }
     }
