@@ -40,6 +40,9 @@ public class FileFinder {
 
     public void listOfFilesExtensionRecursive(File folder_file, String extension) {
         File[] all_files = folder_file.listFiles();
+        if (all_files == null) {
+            return;
+        }
 
         for(File file : all_files) {
             if(file.isFile()) {
