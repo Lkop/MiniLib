@@ -44,3 +44,6 @@ buildNumber.properties
 
 # Intellij
 .idea
+
+# MiniLib output folder
+output
