@@ -1,5 +1,6 @@
 package org.lkop.minilib;
 
+import org.lkop.minilib.constants.Constants;
 import org.lkop.minilib.treecomponents.BaseTreeElement;
 import org.lkop.minilib.utils.ImageUtils;
 import java.io.FileNotFoundException;
@@ -9,14 +10,18 @@ import java.util.Stack;
 
 public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
 
-    private String filename;
+    private String file_path;
     private PrintWriter writer;
     private int serial_counter = 0;
     private Stack<Integer> pos = new Stack<>();
 
-    public TreePrinterVisitor(String filename) throws FileNotFoundException {
-        this.filename = filename;
-        writer = new PrintWriter("output/" + this.filename+".dot");
+    public TreePrinterVisitor(String output_folder) {
+        file_path = output_folder + "/" + Constants.OUTPUT_FILENAME + ".dot";
+        try {
+            writer = new PrintWriter(file_path);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void extractSubgraphs(MethodElement node) {
@@ -61,7 +66,7 @@ public class TreePrinterVisitor extends MethodElementVisitor<Integer> {
         writer.close();
 
         try {
-            ImageUtils.createGIF(filename);
+            ImageUtils.createGIF(file_path);
         }catch (IOException | InterruptedException e){
             e.printStackTrace();
         }
