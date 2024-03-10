@@ -225,6 +225,9 @@ public class ClassInsider {
                     @Override
                     public void edit(FieldAccess f) throws CannotCompileException {
                         System.out.println("FieldAccess of -> " + f.getClassName());
+                        System.out.println("FieldAccess of -> " + f.getFieldName() + " " + f.getSignature() + " of class " + f.getClassName());
+                        if(f.isStatic())
+                            System.out.println("Static field at line : " + f.getLineNumber() + " Is reader : " + f.isReader() + " Is writer : " + f.isWriter());
                         String ss = f.getSignature();
                         String s2 = f.getFieldName();
                         int s3 = f.getLineNumber();
@@ -290,6 +293,7 @@ public class ClassInsider {
             //Try searching method on upper level (anonymous classes only)
             try {
                 one_time_methods.remove(one_time_methods.size() - 1);
+                if(class_pool.get(class_name).getSuperclass()!=null){
                 String superclass_name = class_pool.get(class_name).getSuperclass().getName();
                 new_node.resettingClassname(superclass_name);
 
@@ -300,7 +304,7 @@ public class ClassInsider {
                 }else{
                     List<BaseTreeElement> children = new_node.getFirstParent().getChildren();
                     children.remove(children.size() - 1);
-                }
+                }}
             } catch (NotFoundException ex) {
                 ex.printStackTrace();
             }
