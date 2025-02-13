@@ -28,4 +28,9 @@ public class MiniLibAnnotation implements BeforeAllCallback, BeforeEachCallback 
             annotation_parser.parseMethodAnnotation(test_class.get(), test_method.get());
         }
     }
+
+//    @Override
+//    public void postProcessTestInstance(Object o, ExtensionContext extensionContext) throws Exception {
+//        //System.out.println("asdasdasdasd212343243444444444444444444444444");
+//    }
 }

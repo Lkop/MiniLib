@@ -19,7 +19,7 @@
 <!--        <dependency>-->
 <!--            <groupId>org.reflections</groupId>-->
 <!--            <artifactId>reflections</artifactId>-->
-<!--            <version>0.9.12</version>-->
+<!--            <version>0.10.2</version>-->
 <!--        </dependency>-->
         <dependency>
             <groupId>org.javassist</groupId>
@@ -29,22 +29,28 @@
 <!--        <dependency>-->
 <!--            <groupId>org.apache.maven.resolver</groupId>-->
 <!--            <artifactId>maven-resolver-api</artifactId>-->
-<!--            <version>1.7.2</version>-->
+<!--            <version>1.9.4</version>-->
 <!--        </dependency>-->
         <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-invoker</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
-<!--        <dependency>-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <!--        <dependency>-->
 <!--            <groupId>org.ow2.asm</groupId>-->
 <!--            <artifactId>asm</artifactId>-->
-<!--            <version>9.1</version>-->
+<!--            <version>9.4</version>-->
 <!--        </dependency>-->
 <!--        <dependency>-->
 <!--            <groupId>com.github.javaparser</groupId>-->
 <!--            <artifactId>javaparser-symbol-solver-core</artifactId>-->
-<!--            <version>3.20.2</version>-->
+<!--            <version>3.24.10</version>-->
 <!--        </dependency>-->
     </dependencies>
 </project>

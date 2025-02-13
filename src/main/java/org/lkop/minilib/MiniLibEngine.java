@@ -12,6 +12,7 @@ public class MiniLibEngine {
     public MiniLibEngine() {
         setDependenciesFolderOS();
         setOutputFolderOS();
+        //generateCode(null, null);
     }
 
     public void setDependenciesFolder(String dependencies_folder) {
@@ -37,6 +38,9 @@ public class MiniLibEngine {
             System.out.println("MiniLib Error - Maven folder (" + dependencies_folder + ") is empty");
             return;
         }
+
+        //!important
+        //jar_list.add(new File("L:\\Secret_Projects\\MiniLib_workspace\\Client\\out\\artifacts\\Client_jar\\Client.jar"));
 
         ClassParser class_parser = new ClassParser();
         List<String> classes_list = class_parser.getClasses(jar_list);
@@ -66,6 +70,19 @@ public class MiniLibEngine {
     private void setDependenciesFolderOS() {
         String os_name = System.getProperty("os.name");
         if (os_name.startsWith("Windows")) {
+//            PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:/Users/*/m2/*");
+//            try {
+//                Files.walk(Paths.get(".")).forEach((path) -> {
+//                    path = path.toAbsolutePath().normalize();
+//                    System.out.print("Path: " + path + " ");
+//                    if (pathMatcher.matches(path)) {
+//                        System.out.print("matched");
+//                    }
+//                    System.out.println();
+//                });
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
             dependencies_folder = "C:\\Users\\*\\.m2";
         } else if (os_name.startsWith("Linux")) {
             dependencies_folder = "~/.m2";

@@ -7,6 +7,34 @@ public class AnnotationParser {
 
     MiniLibEngine minilib_engine = new MiniLibEngine();
 
+    public AnnotationParser() {
+        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+//
+//
+////        File jar_file = new File(jar_path);
+////        if(!jar_file.isFile()) {
+////            return;
+////        }
+////
+////        ClassPool class_pool = ClassPool.getDefault();
+////        try {
+////            class_pool.insertClassPath(jar_path);
+////        } catch (NotFoundException e) {
+////            throw new RuntimeException(e);
+////        }
+//
+//
+//        try {
+//            Class<?> test_class = Class.forName("com.bla.TestActivity");
+//            Method[] methods = test_class.getDeclaredMethods();
+//
+//            for (int i = 0; i < methods.length; i++) {
+//                System.out.println(methods[i].toString());
+//            }
+//        } catch (Throwable e) {
+//            System.err.println(e);
+//        }
+     }
 
     public void parseFolderAnnotations(Class<?> clazz) {
         if (clazz.isAnnotationPresent(MiniLibDependenciesFolder.class)) {
