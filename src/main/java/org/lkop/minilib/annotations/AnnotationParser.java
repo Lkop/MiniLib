@@ -50,7 +50,8 @@ public class AnnotationParser {
 
     public void parseMethodAnnotation(Class<?> clazz, Method method) {
         if (method.isAnnotationPresent(MiniLib.class)) {
-            minilib_engine.generateCode(clazz, method);
+            //TODO FIX
+            //minilib_engine.generateCode(clazz, method);
         }
     }
 }
