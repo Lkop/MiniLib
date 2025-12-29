@@ -18,6 +18,11 @@ public class FileFinder {
         return new File("");
     }
 
+    public void addJar(String file) {
+        this.jar_list.add(new File(file));
+        this.jar_list_string.add(file);
+    }
+
     public List<File> findAll(String folder_path, String extension) {
         File folder = new File(folder_path);
         listOfFilesExtensionRecursive(folder, extension);
