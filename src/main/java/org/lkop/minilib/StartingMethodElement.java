@@ -1,13 +1,22 @@
 package org.lkop.minilib;
 
+import javassist.CtClass;
 import org.lkop.minilib.treecomponents.BaseVisitor;
 
-public class StartingMethodElement extends MethodElement{
+public class StartingMethodElement extends MethodElement {
 
     private GeneralInfo general_info;
 
-    public StartingMethodElement() {
-        super();
+//    public StartingMethodElement() {
+//        super();
+//    }
+
+
+    public StartingMethodElement(String class_longname,
+                                 String method_name,
+                                 CtClass[] params,
+                                 String method_signature) {
+        super(class_longname, method_name, params, method_signature, Enum.ExprCallType.METHOD_CALL);
     }
 
     public GeneralInfo getGeneralInfo() {
@@ -18,9 +27,9 @@ public class StartingMethodElement extends MethodElement{
         this.general_info = general_info;
     }
 
-    public String getGraphvizName(){
-        return "start_"+getSerialId();
-    }
+//    public String getGraphvizName(){
+//        return "start_" + getSerialId();
+//    }
 
     @Override
     public <T> T accept(BaseVisitor<? extends T> visitor) {

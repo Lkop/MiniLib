@@ -4,6 +4,7 @@ import javassist.ClassPool;
 import javassist.NotFoundException;
 import javassist.bytecode.ClassFile;
 import org.apache.commons.io.FileUtils;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,13 +18,19 @@ public class PackageCreator {
 
     public PackageCreator(String root_path) {
         this.root_path = root_path;
-        deleteRootFolder();
+        this.deleteRootFolder();
         this.class_creator = new ClassCreator();
         this.new_classpool = class_creator.getNewClassPool();
     }
 
-    public void parseGeneralInfo(StartingMethodElement node) {
-        class_creator.parseGeneralInfo(node.getGeneralInfo());
+//    public void parseGeneralInfo(StartingMethodElement node) {
+//        class_creator.addStartingMethod(node.getGeneralInfo());
+//    }
+
+    public void addStartingMethod(StartingMethodElement node) {
+        createPackageFolder(node);
+        class_creator.copyExistingMethod(node.getClassLongName(), node.getMethodName(), node.getMethodParams());
+        saveClassesInPackage(node);
     }
 
     public void addEmptyFieldsClass(EmptyClassElement node) {
@@ -46,7 +53,7 @@ public class PackageCreator {
 
     public void addMethod(MethodElement node) {
         createPackageFolder(node);
-        switch (node.getType()){
+        switch (node.getType()) {
             case METHOD_CALL:
                 class_creator.copyExistingMethod(node.getClassLongName(), node.getMethodName(), node.getMethodParams());
                 break;
@@ -69,7 +76,7 @@ public class PackageCreator {
                 ClassFile cf = new_classpool.get(class_node.getClassLongName()).getClassFile();
                 File file = new File(root_path + "\\" + class_node.getClassPath() + "\\" + class_node.getClassName() + ".class");
                 cf.write(new DataOutputStream(new FileOutputStream(file)));
-            }catch (NotFoundException | IOException e) {
+            } catch (NotFoundException | IOException e) {
                 e.printStackTrace();
             }
         }

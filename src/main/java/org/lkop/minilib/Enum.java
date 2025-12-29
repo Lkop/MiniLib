@@ -1,11 +1,12 @@
 package org.lkop.minilib;
 
 public class Enum {
+
     public enum Fields {
 
     }
 
-    public enum ExprCall {
+    public enum ExprCallType {
         NEWEXPR_CALL,
         NEWARRAY_CALL,
         METHOD_CALL,

@@ -3,13 +3,13 @@ package org.lkop.minilib;
 import javassist.CtClass;
 import org.lkop.minilib.treecomponents.BaseVisitor;
 
-public class ConstructorElement extends MethodElement{
+public class ConstructorElement extends MethodElement {
 
-    public ConstructorElement(String class_longname, String method_name, CtClass[] params, String method_signature, Enum.ExprCall type) {
+    public ConstructorElement(String class_longname, String method_name, CtClass[] params, String method_signature, Enum.ExprCallType type) {
         super(class_longname, method_name, params, method_signature, type);
     }
 
-    public String getGraphvizName(){
+    public String getGraphvizName() {
         return getClassLongName() + " <-- CONSTRUCTOR(...) (" + getSerialId() + ")";
     }
 

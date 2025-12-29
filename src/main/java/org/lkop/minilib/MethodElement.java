@@ -9,13 +9,17 @@ public class MethodElement extends ClassElement {
     private CtClass[] params;
     private String method_signature;
     private String unique_id;
-    private Enum.ExprCall type;
+    private Enum.ExprCallType type;
 
-    public MethodElement() {
-        super();
-    }
+//    public MethodElement() {
+//        super();
+//    }
 
-    public MethodElement(String class_longname, String method_name, CtClass[] params, String method_signature, Enum.ExprCall type) {
+    public MethodElement(String class_longname,
+                         String method_name,
+                         CtClass[] params,
+                         String method_signature,
+                         Enum.ExprCallType type) {
         super(class_longname);
         this.method_name = method_name;
         this.params = params;
@@ -40,7 +44,7 @@ public class MethodElement extends ClassElement {
         return unique_id;
     }
 
-    public Enum.ExprCall getType() {
+    public Enum.ExprCallType getType() {
         return type;
     }
 
