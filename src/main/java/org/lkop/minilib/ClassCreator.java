@@ -7,7 +7,7 @@ public class ClassCreator {
 
     private ClassPool old_classpool, new_classpool;
     private CtClass new_class;
-    private List<String> one_time_classes;
+    //private List<String> one_time_classes;
 
     public ClassCreator(){
         this.old_classpool = ClassPool.getDefault();
@@ -20,7 +20,22 @@ public class ClassCreator {
     }
 
     public void parseGeneralInfo(GeneralInfo general_info) {
-        one_time_classes = general_info.getOneTimeClasses();
+        //one_time_classes = general_info.getOneTimeClasses();
+    }
+
+    public boolean addStartingMethod(String class_longname, String method_name, CtClass[] params) {
+        try {
+            CtClass old_class = old_classpool.getCtClass(class_longname);
+            new_class = initializeCtClass(class_longname);
+
+            //!important - Fields added in previous step (initializeCtClass)
+//            for(CtField ct_field : old_class.getDeclaredFields()) {
+//                new_class.addField(new CtField(ct_field, new_class));
+//            }
+        }catch(NotFoundException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     public boolean addEmptyFieldClass(String class_longname) {
@@ -125,10 +140,7 @@ public class ClassCreator {
                 //Copy Fields
                 for(CtField ct_field : old_class.getDeclaredFields()) {
                     String field_type = ct_field.getType().getName();
-
-
-
-
+                    Object aasdas = ct_field.getConstantValue();
 
 //                    if(field_type.startsWith("java.") || one_time_classes.contains(ct_field.getType().getName())) {
 //                        new_class.addField(new CtField(ct_field, new_class));
