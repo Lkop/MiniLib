@@ -10,7 +10,7 @@ public class ClassGeneratorVisitor extends MethodElementVisitor<Integer> {
     @Override
     public Integer visitStartingMethodElement(StartingMethodElement node) {
         System.out.println("Parsing GeneralInfo");
-        pc.parseGeneralInfo(node);
+        pc.addStartingMethod(node);
         super.visitMethodElement(node);
         return 0;
     }
