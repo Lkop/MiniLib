@@ -62,39 +62,89 @@ public class ClassInsider {
         return one_time_classes;
     }
 
-    public void assignStartingMethod(String class_name, String starting_method) {
-        this.starting_class = class_name;
-        this.starting_method = starting_method;
-
+    public int getAllMethods(String target_jar, List<String> clazzes) {
+        int declared_method_counter = 0;
+        classpool_target = new ClassPool();
+//        classpool_target = ClassPool.getDefault();
         try {
-            this.params = class_pool.getCtClass(starting_class).getDeclaredMethod(starting_method).getParameterTypes();
+            classpool_target.insertClassPath(target_jar);
+
+            CtClass ct_class;
+            for (String clazz : clazzes) {
+                if (clazz.startsWith("META-INF") || clazz.startsWith("BOOT-INF")){
+                    continue;
+                }
+                ct_class = classpool_target.get(clazz);
+                if (ct_class.isInterface()) {
+                    continue;
+                }
+                String str = ct_class.getGenericSignature();
+                CtConstructor[] constructors = ct_class.getConstructors();
+                int constructor_counter = 0;
+                for (CtConstructor constructor : constructors) {
+                    Boolean is_empty = constructor.isEmpty();
+                    if (!is_empty) {
+                        constructor_counter++;
+                    }
+                    Boolean class_initializer = constructor.isClassInitializer();
+                    Boolean is_con = constructor.isConstructor();
+
+
+                    String method_signature = constructor.getSignature();
+                    System.out.println(method_signature);
+                }
+
+                declared_method_counter += constructor_counter;
+
+                CtMethod[] methods = ct_class.getDeclaredMethods();
+                for (CtMethod method : methods) {
+                    String method_signature = method.getSignature();
+                    System.out.println(method_signature);
+                }
+                int method_counter = methods.length;
+                declared_method_counter += method_counter;
+            }
+        }catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setStartingMethod(String starting_class_str, String starting_method_str) {
+        CtClass starting_ctclass;
+        try {
+            starting_ctclass = class_pool.getCtClass(starting_class_str);
+            this.starting_class = starting_ctclass.getName();
+            this.starting_method = starting_ctclass.getDeclaredMethod(starting_method_str).getName();
+            this.starting_method_params = starting_ctclass.getDeclaredMethod(starting_method_str).getParameterTypes();
+            this.starting_method_signature = starting_ctclass.getDeclaredMethod(starting_method_str).getSignature();
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public List listCalledMethods() {
-        List<ClassInfo> m_list = new ArrayList<>();
-//        parents_stack.push(root);
-        //this.listCalledMethodsRecursive(this.starting_class, this.starting_method, m_list);
-        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, this.params, Enum.ExprCall.METHOD_CALL, m_list);
-        return m_list;
-    }
-
-    public List listCalledMethods(List<String> keep_only) {
-        this.keep_only_classes = keep_only;
-        this.one_time_classes = new ArrayList<>();
+    public void listCalledMethods(List<String> keep_only_classes) {
+        this.keep_only_classes = keep_only_classes;     //Use target and maven classes only
+        this.one_time_classes = new ArrayList<>();      //Cache to store classes only on the fist occurrence
         this.one_time_methods = new ArrayList<>();
         this.one_time_extras = new ArrayList<>();
 
-        List<ClassInfo> m_list = new ArrayList<>();
+        //List<ClassInfo> m_list = new ArrayList<>();
 
-        root = new StartingMethodElement();
+        root = new StartingMethodElement(
+                this.starting_class,
+                this.starting_method,
+                this.starting_method_params,
+                this.starting_method_signature
+        );
+
         parents_stack.push(root);
 
-        this.listCalledMethodsRecursive(this.starting_class, this.starting_method, this.params, Enum.ExprCall.METHOD_CALL, m_list);
-        //this.listCalledMethodsRecursive(this.starting_class, this.starting_method, null, 2);
-        return m_list;
+        this.listCalledMethodsRecursive(
+                this.starting_class,
+                this.starting_method,
+                this.starting_method_params,
+                Enum.ExprCallType.METHOD_CALL
+        );
     }
 
 //    private void listCalledMethodsRecursive(String class_name, String starting_method, CtClass[] params, int type) {
@@ -148,10 +198,7 @@ public class ClassInsider {
 //        }
 //    }
 
-    private void listCalledMethodsRecursive(String class_name, String starting_method, CtClass[] params, Enum.ExprCall type, List list) {
-        if (class_name != null && class_name.equals("com.google.gson.internal.bind.TypeAdapters")) {
-            int a = 1;
-        }
+    private void listCalledMethodsRecursive(String class_name, String starting_method, CtClass[] params, Enum.ExprCallType type) {
 
         try {
             CtClass ct_class = class_pool.get(class_name);
@@ -190,6 +237,12 @@ public class ClassInsider {
             CtClass clsd = ct_class.getDeclaringClass();
             Collection<String> aa = ct_class.getRefClasses();
 //            ct_class.get
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
             CtBehavior behavior = null;
             switch(type) {
                 case METHOD_CALL:
