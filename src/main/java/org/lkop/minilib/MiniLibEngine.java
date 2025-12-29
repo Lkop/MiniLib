@@ -1,18 +1,29 @@
 package org.lkop.minilib;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.List;
 
 public class MiniLibEngine {
 
+    private String target_jar;
     private String dependencies_folder;
     private String output_folder;
+    private FileFinder file_finder;
+    private ClassParser class_parser;
 
     public MiniLibEngine() {
         setDependenciesFolderOS();
         setOutputFolderOS();
+
+        this.file_finder = new FileFinder();
+        this.class_parser = new ClassParser();
+
         //generateCode(null, null);
+    }
+
+    public void setTargetJar(String target_jar) {
+        this.target_jar = target_jar;
+        file_finder.addJar(target_jar);
     }
 
     public void setDependenciesFolder(String dependencies_folder) {
@@ -24,30 +35,64 @@ public class MiniLibEngine {
     }
 
     public void setOutputFolder(String output_folder) {
-        this.output_folder = output_folder + "/MiniLib_Output";
+        this.output_folder = output_folder + "/minilib-output";
         File directory = new File(this.output_folder);
         if (!directory.exists()){
             directory.mkdirs();
         }
     }
 
-    public void generateCode(Class<?> clazz, Method method) {
-        FileFinder jf = new FileFinder();
-        List<File> jar_list = jf.findAll(dependencies_folder, ".jar");
+
+//    public void generateCode(Class<?> clazz, Method method) {
+//        generateCodeCore(clazz.getName(), method.getName());
+//    }
+//
+//    public void generateCode(Class<?> clazz, Method method) {
+//        try {
+//            Class<?> clazz = Class.forName(clazz_str);
+//            Method method = clazz.getDeclaredMethod(method_str);
+//            this.generateCode(clazz, method);
+//        } catch (ClassNotFoundException | NoSuchMethodException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public void generateCodeCore(String clazz_str, String method_str) {
+
+
+
+
+        //TODO FIX
+//        dependencies_folder = "C:\\Users\\Loukas\\.m2";
+        dependencies_folder = "C:\\Users\\Loukas\\Desktop\\jars\\pmpr";
+
+        List<File> jar_list = file_finder.findAll(dependencies_folder, ".jar");
         if (jar_list.size() == 0) {
             System.out.println("MiniLib Error - Maven folder (" + dependencies_folder + ") is empty");
             return;
         }
 
+
+
+
         //!important
         //jar_list.add(new File("L:\\Secret_Projects\\MiniLib_workspace\\Client\\out\\artifacts\\Client_jar\\Client.jar"));
 
-        ClassParser class_parser = new ClassParser();
-        List<String> classes_list = class_parser.getClasses(jar_list);
+        //Populate clazzes list
+        //class_parser.parseTargetJar("C:\\Users\\Loukas\\Desktop\\tutorial-NOMS24-main\\target\\ReputationSystem-1.0.jar");
+        class_parser.parseDependenciesJars(jar_list);
 
         ClassInsider class_insider = new ClassInsider(jar_list);
-        class_insider.assignStartingMethod(clazz.getName(), method.getName());
-        class_insider.listCalledMethods(classes_list);
+
+        List<String> a = class_parser.extractClazzesFromJar(target_jar);
+
+        class_insider.getAllMethods(target_jar, a);
+
+//        class_insider.getAllMethods(target_jar, class_parser.getClazzes());
+
+
+        class_insider.setStartingMethod(clazz_str, method_str);
+        class_insider.listCalledMethods(class_parser.getClazzes());
 
 
 
