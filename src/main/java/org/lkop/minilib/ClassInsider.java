@@ -2,12 +2,12 @@ package org.lkop.minilib;
 
 
 import javassist.bytecode.BadBytecode;
+import javassist.bytecode.MethodInfo;
 import javassist.bytecode.SignatureAttribute;
 import javassist.expr.*;
 
 import javassist.*;
 import org.lkop.minilib.constants.Constants;
-import org.lkop.minilib.models.ClassInfo;
 import org.lkop.minilib.treecomponents.BaseTreeElement;
 
 
@@ -16,20 +16,21 @@ import java.util.*;
 
 public class ClassInsider {
 
-    private ClassPool class_pool;
+    private ClassPool class_pool, classpool_target;
     private String starting_class;
     private String starting_method;
-    private CtClass[] params;
+    private CtClass[] starting_method_params;
+    private String starting_method_signature;
     private ClassElement root = null;
     private ClassElement current_parent = null;
     private Stack<ClassElement> parents_stack = new Stack<>();
-    private String previous_class = null;
+    //private String previous_class = null;
     private MethodElement new_node;                 //Accessing previous element to change parent superclass
 
     private List<String> keep_only_classes;
     private List<String> one_time_classes;
     private List<String> one_time_methods;
-    private List<String> one_time_field_classes;
+    //private List<String> one_time_field_classes;
     private List<String> one_time_extras;
 
     public ClassInsider(String jar_path) {
@@ -51,7 +52,7 @@ public class ClassInsider {
             }
         }catch (NotFoundException e) {
             e.printStackTrace();
-        }
+        } 
     }
 
     public ClassElement getRoot() {
@@ -107,6 +108,8 @@ public class ClassInsider {
         }catch (NotFoundException e) {
             e.printStackTrace();
         }
+
+        return declared_method_counter;
     }
 
     public void setStartingMethod(String starting_class_str, String starting_method_str) {
@@ -200,6 +203,10 @@ public class ClassInsider {
 
     private void listCalledMethodsRecursive(String class_name, String starting_method, CtClass[] params, Enum.ExprCallType type) {
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+//        if (class_name != null && class_name.equals("com.google.gson.internal.bind.TypeAdapters")) {
+//            int a = 1;
+//        }
         try {
             CtClass ct_class = class_pool.get(class_name);
             //CtClass ct_class = class_pool.get("com.google.gson.Gson$FutureTypeAdapter");
@@ -277,7 +284,15 @@ public class ClassInsider {
 
                     @Override
                     public void edit(FieldAccess f) throws CannotCompileException {
-                        System.out.println("FieldAccess of -> " + f.getClassName());
+                        System.out.println("FieldAccess -> Class: " + f.getClassName() + " - Field: " + f.getFieldName());
+                        try {
+                            CtField gggg = f.getField();
+//                            gggg.getType().
+                            System.out.println("Field -> " + f.getFieldName());
+                        } catch (NotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+
                         String ss = f.getSignature();
                         String s2 = f.getFieldName();
                         int s3 = f.getLineNumber();
@@ -296,13 +311,15 @@ public class ClassInsider {
 
                     @Override
                     public void edit(NewExpr e) {
+                        System.out.println("NewExpr -> " + e.getFileName());
                         try {
                             CtConstructor constructor = e.getConstructor();
                             String inline_info = constructor.getSignature();
-                            //System.out.println(inline_info);
+
+//                            System.out.println(inline_info);
                             if (!constructor.isEmpty()) {
-                                addToTree(constructor.getLongName().replaceAll("\\([^)]*\\)", ""), null, constructor.getSignature(), constructor.getParameterTypes(), Enum.ExprCall.CONSTRUCTOR_CALL, list);
-                                listCalledMethodsRecursive(constructor.getLongName().replaceAll("\\([^)]*\\)", ""), constructor.getName(), constructor.getParameterTypes(), Enum.ExprCall.CONSTRUCTOR_CALL, list);
+                                addToTree(constructor.getLongName().replaceAll("\\([^)]*\\)", ""), null, constructor.getSignature(), constructor.getParameterTypes(), Enum.ExprCallType.CONSTRUCTOR_CALL);
+                                listCalledMethodsRecursive(constructor.getLongName().replaceAll("\\([^)]*\\)", ""), constructor.getName(), constructor.getParameterTypes(), Enum.ExprCallType.CONSTRUCTOR_CALL);
                             }
                         } catch (NotFoundException ex) {
                             ex.printStackTrace();
@@ -311,17 +328,19 @@ public class ClassInsider {
 
                     @Override
                     public void edit(NewArray a) throws CannotCompileException {
+                        System.out.println("NewArray -> " + a.getFileName());
                         super.edit(a);
                     }
 
                     @Override
                     public void edit(MethodCall m) throws CannotCompileException {
+                        System.out.println("MethodCall -> " + m.getFileName());
                         String inline_info = m.getClassName() + "+" + m.getMethodName() + "+" + m.getSignature();
                         //System.out.println(inline_info);
                         try {
                             int ln = m.getLineNumber();
                             CtClass[] ctm = m.getMethod().getParameterTypes();
-                            addToTree(m.getClassName(), m.getMethodName(), m.getSignature(), m.getMethod().getParameterTypes(), Enum.ExprCall.METHOD_CALL, list);
+                            addToTree(m.getClassName(), m.getMethodName(), m.getSignature(), m.getMethod().getParameterTypes(), Enum.ExprCallType.METHOD_CALL);
                         } catch (NotFoundException e) {
                             e.printStackTrace();
                         }
@@ -329,10 +348,11 @@ public class ClassInsider {
 
                     @Override
                     public void edit(ConstructorCall c) {
+                        System.out.println("ConstructorCall -> " + c.getFileName());
                         String inline_info = c.getClassName() + "+" + c.getMethodName() + "+" + c.getSignature();
                         //System.out.println(inline_info);
                         try {
-                            addToTree(c.getClassName(), c.getMethodName(), c.getSignature(), c.getConstructor().getParameterTypes(), Enum.ExprCall.CONSTRUCTOR_CALL, list);
+                            addToTree(c.getClassName(), c.getMethodName(), c.getSignature(), c.getConstructor().getParameterTypes(), Enum.ExprCallType.CONSTRUCTOR_CALL);
                         } catch (NotFoundException e) {
                             e.printStackTrace();
                         }
@@ -342,19 +362,23 @@ public class ClassInsider {
         }catch (NotFoundException e) {
             //Try searching method on upper level (anonymous classes only)
             try {
+                if(class_name.equals("java.lang.Object")){
+                    return;
+                }
+
                 one_time_methods.remove(one_time_methods.size() - 1);
                 String superclass_name = class_pool.get(class_name).getSuperclass().getName();
                 new_node.resettingClassname(superclass_name);
 
                 String inline_info = superclass_name + "+" + new_node.getMethodName() + "+" + new_node.getMethodSignature();
                 if (!one_time_methods.contains(inline_info)) {
-                    listCalledMethodsRecursive(superclass_name, starting_method, params, type, list);
+                    listCalledMethodsRecursive(superclass_name, starting_method, params, type);
                     one_time_methods.add(inline_info);
                 }else{
                     List<BaseTreeElement> children = new_node.getFirstParent().getChildren();
                     children.remove(children.size() - 1);
                 }
-            } catch (NotFoundException ex) {
+            } catch (NotFoundException | NullPointerException ex) {
                 ex.printStackTrace();
             }
         } catch (CannotCompileException e) {
@@ -362,7 +386,9 @@ public class ClassInsider {
         }
     }
 
-    private void addToTree(String class_name, String method_name, String signature, CtClass[] params, Enum.ExprCall call_type, List list) throws NotFoundException {
+    private void addToTree(String class_name, String method_name, String signature,
+                           CtClass[] params, Enum.ExprCallType call_type)
+            throws NotFoundException {
         if (root != null) {
             if(parents_stack.size() > 0) {
                 current_parent = parents_stack.peek();
@@ -382,9 +408,9 @@ public class ClassInsider {
                 System.out.println(inline_info);
 
                 new_node = null;
-                if (call_type == Enum.ExprCall.METHOD_CALL) {
+                if (call_type == Enum.ExprCallType.METHOD_CALL) {
                     new_node = new MethodElement(class_name, method_name, params, signature, call_type);
-                }else if(call_type == Enum.ExprCall.CONSTRUCTOR_CALL) {
+                }else if(call_type == Enum.ExprCallType.CONSTRUCTOR_CALL) {
                     new_node = new ConstructorElement(class_name, method_name, params, signature, call_type);
                 }
                 if (root == null) {
@@ -400,7 +426,7 @@ public class ClassInsider {
                 return;
             }
 
-            listCalledMethodsRecursive(class_name, method_name, params, call_type,  list);
+            listCalledMethodsRecursive(class_name, method_name, params, call_type);
 
             if(keep_only_classes != null && keep_only_classes.contains(class_name)) {
                 parents_stack.pop();
